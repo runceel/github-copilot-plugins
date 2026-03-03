@@ -1,19 +1,40 @@
 ---
 name: spec-driven-workflow
-description: Specification-driven workflow guide for work items under spec/. Use this when defining requirements, design, and tasks before implementation.
+description: Specification-driven workflow guide for issue-based work items. Use this when defining requirements, design, and tasks before implementation.
 ---
 
 # Spec Driven Workflow v1
 
-**Iportant: Answer in Japanese.**
+**Important: Answer in Japanese.**
 
 **Specification-Driven Workflow:**
 Bridge the gap between requirements and implementation.
 
-**Maintain these artifacts at all times:**
+## Quick Start (Issue-First)
 
-Each requirement (feature, epic, or work item) has its own folder under `spec/`.
-The folder name should be a kebab-case identifier (e.g., `database-access-setup`, `batch-execution-results`).
+1. Create one GitHub Issue per requirement (feature, epic, or work item).
+2. Document requirements in EARS notation in the Issue body (or pinned comment).
+3. Document design in the Issue (`## Design`) and keep it updated while implementing.
+4. Manage implementation progress with an Issue task checklist (`## Tasks`).
+5. If the Issue becomes too large, use `spec/<requirement-name>/` as a fallback and link those files from the Issue.
+
+**Maintain these artifacts at all times (Issue-based Primary / File-based Fallback):**
+
+Each requirement (feature, epic, or work item) should have one GitHub Issue as the primary source of truth.
+Use the following structure in the Issue body (or pinned comments):
+
+```markdown
+## Requirements (EARS)
+- WHEN [condition or event], THE SYSTEM SHALL [expected behavior]
+
+## Design
+- Architecture, data flow, interfaces, data models, constraints
+
+## Tasks
+- [ ] Task description, expected outcome, dependencies
+```
+
+Fallback structure (only when Issue-only management is insufficient):
 
 ```
 spec/
@@ -23,11 +44,10 @@ spec/
     tasks.md           # Detailed, trackable implementation plan
 ```
 
-- **`spec/<requirement-name>/requirements.md`**: User stories and acceptance criteria in structured EARS notation.
-- **`spec/<requirement-name>/design.md`**: Technical architecture, sequence diagrams, implementation considerations.
-- **`spec/<requirement-name>/tasks.md`**: Detailed, trackable implementation plan.
+- **Primary (`Issue`)**: Manage requirements, design, and tasks in Issue sections/comments/checklists.
+- **Fallback (`spec/<requirement-name>/...`)**: Use files when details exceed practical Issue size; always link files from the Issue.
 
-This per-requirement folder structure ensures traceability, supports parallel development, and prevents conflicts between independent work items.
+This issue-first model ensures traceability, supports parallel development, and keeps planning visible to stakeholders.
 
 ## Universal Documentation Framework
 
@@ -41,7 +61,7 @@ Use only for concise artifacts such as changelogs and pull request descriptions.
 
 #### Action Documentation Template (All Steps/Executions/Tests)
 
-```bash
+```text
 ### [TYPE] - [ACTION] - [TIMESTAMP]
 **Objective**: [Goal being accomplished]
 **Context**: [Current state, requirements, and reference to prior steps]
@@ -54,7 +74,7 @@ Use only for concise artifacts such as changelogs and pull request descriptions.
 
 #### Decision Record Template (All Decisions)
 
-```bash
+```text
 ### Decision - [TIMESTAMP]
 **Decision**: [What was decided]
 **Context**: [Situation requiring decision and data driving it]
@@ -120,10 +140,11 @@ For use in pull request summaries or executive summaries.
 
 **Checklist:**
 
-- [ ] **Reference project architecture documentation:**
+- [ ] **Reference project architecture documentation and confirm unknowns with the user:**
   - For backend work, consult `docs/backend-architecture.md` to review design patterns, layer responsibilities, and coding conventions.
   - For frontend work, consult `docs/frontend-architecture.md` to review component structure, state management, and UI patterns.
-  - Ensure design decisions are consistent with existing architectural principles.
+  - If architecture documents are missing, outdated, or ambiguous, ask the user before proceeding and record the decision.
+  - Ensure design decisions are consistent with confirmed architectural principles.
 
 - [ ] **Define adaptive execution strategy based on Confidence Score:**
   - **High Confidence (>85%)**
@@ -143,12 +164,12 @@ For use in pull request summaries or executive summaries.
     - Re-run ANALYZE phase after research.
     - Escalate only if confidence remains low.
 
-- [ ] **Document technical design in `spec/<requirement-name>/design.md`:**
+- [ ] **Document technical design in the Issue (`## Design`) and optionally `spec/<requirement-name>/design.md` (fallback):**
   - **Architecture:** High-level overview of components and interactions.
   - **Data Flow:** Diagrams and descriptions.
   - **Interfaces:** API contracts, schemas, public-facing function signatures.
   - **Data Models:** Data structures and database schemas.
-  - **Cross-Requirement Dependencies:** References to related requirement folders, if any.
+  - **Cross-Requirement Dependencies:** References to related Issues (and linked fallback folders, if any).
 
 - [ ] **Document error handling:**
   - Create an error matrix with procedures and expected responses.
@@ -161,9 +182,9 @@ For use in pull request summaries or executive summaries.
   - Screenshot naming convention: `.playwright-cli/screenshots/<requirement-name>/XX-description.png`
     - `XX`: Sequential two-digit number (e.g., `01`, `02`, `03`)
     - `description`: Concise kebab-case description of the captured state (e.g., `search-results`, `validation-errors`, `save-success`)
-  - Document the visual test plan in `spec/<requirement-name>/design.md`.
+  - Document the visual test plan in the Issue (`## Design`) or fallback `spec/<requirement-name>/design.md`.
 
-- [ ] **Create implementation plan in `spec/<requirement-name>/tasks.md`:**
+- [ ] **Create implementation plan in the Issue task checklist (`## Tasks`) and optionally `spec/<requirement-name>/tasks.md` (fallback):**
   - For each task, include description, expected outcome, and dependencies.
 
 **Critical Constraint:**
@@ -265,7 +286,7 @@ For use in pull request summaries or executive summaries.
     1. Executive summary.
     2. Changelog from **Streamlined Action Log**.
     3. Links to validation artifacts and Decision Records.
-    4. Links to final `spec/<requirement-name>/requirements.md`, `spec/<requirement-name>/design.md`, and `spec/<requirement-name>/tasks.md`.
+    4. Links to final Issue artifacts (`Requirements`, `Design`, `Tasks`) and any fallback `spec/<requirement-name>/` files.
 - [ ] Finalize workspace.
       - Archive intermediate files, logs, and temporary artifacts to `.agent_work/`.
 - [ ] Continue to next task.
@@ -288,7 +309,7 @@ For use in pull request summaries or executive summaries.
    - Revisit the DESIGN phase.
    - Update technical design, plans, or dependencies as needed.
 3. **Re-plan**:
-   - Adjust the implementation plan in `spec/<requirement-name>/tasks.md` to address new findings.
+   - Adjust the implementation plan in the Issue task checklist and fallback `spec/<requirement-name>/tasks.md` if used.
 4. **Retry execution**:
    - Re-execute failed steps with corrected parameters or logic.
 5. **Escalate**:
