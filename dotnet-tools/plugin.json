@@ -1,0 +1,12 @@
+{
+  "name": "dotnet-tools",
+  "description": ".NET development utilities with Microsoft Learn documentation access, Blazor, clean architecture, Playwright, and more.",
+  "version": "0.1.0",
+  "author": {
+    "name": "runceel"
+  },
+  "license": "MIT",
+  "keywords": ["dotnet", "blazor", "aspnetcore", "playwright", "clean-architecture", "microsoft-learn"],
+  "skills": ["skills/"],
+  "mcpServers": ".mcp.json"
+}
